@@ -2,11 +2,8 @@
 
 # Poll plugin for Craft CMS 3.x
 
-Download and install poll in the Craft CMS plugin store, or:
+**For installation and usage please read the docs at [io.24hoursmedia.com](https://io.24hoursmedia.com/craftcms-poll)**
 
-Composer:
-
-    twentyfourhoursmedia/poll
 
 ## Requirements
 
@@ -15,10 +12,11 @@ PHP >= 7.2
 
 ## Installation
 
-This plugin has not been released to the plugin store.
-Please contact us if you are interested at the current moment.
+Download and install poll in the Craft CMS plugin store, or:
 
-Normal installation will be through composer or the plugin store.
+Composer:
+
+    twentyfourhoursmedia/poll.
 
 ## Post-installation setup
 
