@@ -17,6 +17,7 @@
 
 {% do view.registerAssetBundle("twentyfourhoursmedia\\poll\\assetbundles\\poll\\PollAsset") %}
 
+
 <h2>Settings</h2>
 
 {{ forms.lightSwitchField({
@@ -25,15 +26,44 @@
     id: 'blockPluginRemoval',
     name: 'blockPluginRemoval',
     on: settings['blockPluginRemoval']
-    })
-}}
+}) }}
+
+<h3>Cookie</h3>
+
+<p>For anonymous participation, the latest polls in which one has participated is kept in a cookie.</p>
+
+
+{{ forms.textField({
+    label: 'Number of participations to keep in a cookie',
+    instructions: 'Number of poll participations to keep. Setting this to a large value increases cookie size.',
+    id: 'numCookieParticipations',
+    name: 'numCookieParticipations',
+    size: 10,
+    value: settings['numCookieParticipations'],
+}) }}
+{% if settings.getError('numCookieParticipations') %}
+    {{ forms.errorList([settings.getError('numCookieParticipations')]) }}
+{% endif %}
+
+{{ forms.textField({
+    label: 'Participation cookie lifetime in days',
+    instructions: 'Number of days to keep the participations cookie.',
+    id: 'participationsCookieLifetime',
+    name: 'participationsCookieLifetime',
+    size: 10,
+    value: settings['participationsCookieLifetime'],
+}) }}
+{% if settings.getError('participationsCookieLifetime') %}
+    {{ forms.errorList([settings.getError('participationsCookieLifetime')]) }}
+{% endif %}
 
 <hr/>
 
 <h2>Additional setup</h2>
 
 <p>
-    <strong>{{ "You can setup sections and fields in the Poll Utility section" }}. <a href="{{ url('utilities/poll-poll-utility') }}">{{ "Go there" | t }} &raquo;</a></strong>
+    <strong>{{ "You can setup sections and fields in the Poll Utility section" }}. <a href="{{ url('utilities/poll-poll-utility') }}">{{ "Go there" | t }}
+            &raquo;</a></strong>
 </p>
 
 <p>

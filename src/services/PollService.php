@@ -128,16 +128,22 @@ class PollService extends Component
         return $participatedPolls;
     }
 
+    /**
+     * Adds a poll id to a cookie to keep track of anonymous participations
+     *
+     * @param $pollId
+     */
     public function addPollIdToCookie($pollId)
     {
+        $settings = Poll::$plugin->settings;
         $cookiePollIds = $this->getCookiePollIds();
         array_unshift($cookiePollIds, $pollId);
-        $cookiePollIds = array_slice($cookiePollIds, 0, 200);
+        $cookiePollIds = array_slice($cookiePollIds, 0, $settings->numCookieParticipations);
         $cookiePollIds = array_values(array_unique($cookiePollIds));
         $cookie = new Cookie([
             'name' => '_pollids',
             'value' => implode(',', $cookiePollIds),
-            'expire' => time() + 86400 * 365
+            'expire' => time() + 86400 * $settings->participationsCookieLifetime
         ]);
         Craft::$app->getResponse()->cookies->add($cookie);
     }
