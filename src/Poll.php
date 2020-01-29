@@ -10,16 +10,10 @@
 
 namespace twentyfourhoursmedia\poll;
 
-use craft\events\ModelEvent;
-use craft\fields\Matrix;
-use twentyfourhoursmedia\poll\services\PollService as PollServiceService;
-use twentyfourhoursmedia\poll\services\InstallService;
-use twentyfourhoursmedia\poll\variables\PollVariable;
-use twentyfourhoursmedia\poll\twigextensions\PollTwigExtension;
-use twentyfourhoursmedia\poll\models\Settings;
-use twentyfourhoursmedia\poll\utilities\PollUtility as PollUtilityUtility;
-
 use Craft;
+use yii\base\Event;
+use craft\elements\Entry;
+use craft\fields\Matrix;
 use craft\base\Plugin;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
@@ -28,8 +22,12 @@ use craft\services\Utilities;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-
-use yii\base\Event;
+use twentyfourhoursmedia\poll\services\PollService as PollServiceService;
+use twentyfourhoursmedia\poll\services\InstallService;
+use twentyfourhoursmedia\poll\variables\PollVariable;
+use twentyfourhoursmedia\poll\twigextensions\PollTwigExtension;
+use twentyfourhoursmedia\poll\models\Settings;
+use twentyfourhoursmedia\poll\utilities\PollUtility as PollUtilityUtility;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -52,6 +50,8 @@ use yii\base\Event;
  */
 class Poll extends Plugin
 {
+    public const LOG_CATEGORY = 'poll_plugin';
+
     // Static Properties
     // =========================================================================
 
@@ -138,7 +138,17 @@ class Poll extends Plugin
             }
         );
 
-        Event::on(Matrix::class, Matrix::EVENT_BEFORE_VALIDATE, static function(\yii\base\ModelEvent $event) {
+        // Remove poll answer entries if a poll entry is deleted
+        Event::on(Entry::class, Entry::EVENT_AFTER_DELETE, static function (\yii\base\Event $event) {
+            $service = self::$plugin->pollService;
+            if ($service->isAPollEntry($event->sender)) {
+                $numRemoved = $service->removeAnswersForPoll($event->sender);
+                Craft::warning(sprintf('Removed %d poll submissions because poll entry with ID %d was removed', $numRemoved, $event->sender->id), self::LOG_CATEGORY);
+            }
+        });
+
+        // Block certain settings on poll answer matrices
+        Event::on(Matrix::class, Matrix::EVENT_BEFORE_VALIDATE, static function (\yii\base\ModelEvent $event) {
             $service = self::$plugin->pollService;
             if ($service->isAnAnswerMatrix($event->sender)) {
                 $event->isValid = $service->validateAnswerMatrixField($event->sender);
@@ -156,24 +166,24 @@ class Poll extends Plugin
             }
         );
 
-/**
- * Logging in Craft involves using one of the following methods:
- *
- * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
- * Craft::info(): record a message that conveys some useful information.
- * Craft::warning(): record a warning message that indicates something unexpected has happened.
- * Craft::error(): record a fatal error that should be investigated as soon as possible.
- *
- * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
- *
- * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
- * the category to the method (prefixed with the fully qualified class name) where the constant appears.
- *
- * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
- * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
- *
- * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
- */
+        /**
+         * Logging in Craft involves using one of the following methods:
+         *
+         * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
+         * Craft::info(): record a message that conveys some useful information.
+         * Craft::warning(): record a warning message that indicates something unexpected has happened.
+         * Craft::error(): record a fatal error that should be investigated as soon as possible.
+         *
+         * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
+         *
+         * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
+         * the category to the method (prefixed with the fully qualified class name) where the constant appears.
+         *
+         * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
+         * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
+         *
+         * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
+         */
         Craft::info(
             Craft::t(
                 'poll',

@@ -251,13 +251,28 @@ class PollService extends Component
      */
     public function isAnAnswerMatrix($element)
     {
-        // it must be a craft\fields\Matrix
-
         if (!$element instanceof Matrix) {
             return false;
         }
         // the handle must be one of the registered handles
         if ($element->handle !== $this->getConfigOption(self::CFG_FIELD_ANSWER_MATRIX_HANDLE)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Verify if something is a Poll entry
+     *
+     * @param $element
+     * @return bool
+     */
+    public function isAPollEntry($element)
+    {
+        if (!$element instanceof Entry) {
+            return false;
+        }
+        if ($element->section->handle !== $this->getConfigOption(self::CFG_POLL_SECTION_HANDLE)) {
             return false;
         }
         return true;
@@ -282,6 +297,23 @@ class PollService extends Component
             return false;
         }
         return true;
+    }
+
+    /**
+     * Remove all answer submissions for a poll entry.
+     * Called by an event handler when a poll entry is removed.
+     * First check ::isAPollEntry before calling this method.
+     *
+     * @param $entry
+     * @return int                          the number of records deleted
+     * @see PollService::isAPollEntry()     to check if the entry is actually a poll
+     * @see Poll::init()                    where the event handler is registered
+     */
+    public function removeAnswersForPoll($entry) : int {
+        if (!isset($entry->id) || !$entry->id) {
+            throw new \LogicException('No id set');
+        }
+        return PollAnswer::deleteAll(['pollId' => $entry->id]);
     }
 
 
