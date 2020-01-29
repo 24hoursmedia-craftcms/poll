@@ -18,6 +18,7 @@ Composer:
 
     composer require twentyfourhoursmedia/poll
 
+
 ## Post-installation setup
 
 After the plugin has been installed and activated, further setup is required to install the default field types,
