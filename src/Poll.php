@@ -11,6 +11,7 @@
 namespace twentyfourhoursmedia\poll;
 
 use Craft;
+use craft\helpers\UrlHelper;
 use yii\base\Event;
 use craft\elements\Entry;
 use craft\fields\Matrix;
@@ -50,10 +51,11 @@ use twentyfourhoursmedia\poll\utilities\PollUtility as PollUtilityUtility;
  */
 class Poll extends Plugin
 {
-    public const LOG_CATEGORY = 'poll_plugin';
 
     // Static Properties
     // =========================================================================
+
+    public const LOG_CATEGORY = 'poll_plugin';
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
@@ -82,10 +84,6 @@ class Poll extends Plugin
      *
      * Called after the plugin class is instantiated; do any one-time initialization
      * here such as hooks and events.
-     *
-     * If you have a '/vendor/autoload.php' file, it will be loaded for you automatically;
-     * you do not need to load it in your init() method.
-     *
      */
     public function init()
     {
@@ -128,15 +126,17 @@ class Poll extends Plugin
         );
 
         // Register our variables
-        Event::on(
-            CraftVariable::class,
-            CraftVariable::EVENT_INIT,
-            function (Event $event) {
-                /** @var CraftVariable $variable */
-                $variable = $event->sender;
-                $variable->set('poll', PollVariable::class);
-            }
-        );
+
+//        Event::on(
+//            CraftVariable::class,
+//            CraftVariable::EVENT_INIT,
+//            function (Event $event) {
+//                /** @var CraftVariable $variable */
+//                $variable = $event->sender;
+//                $variable->set('poll', PollVariable::class);
+//            }
+//        );
+
 
         // Remove poll answer entries if a poll entry is deleted
         Event::on(Entry::class, Entry::EVENT_AFTER_DELETE, static function (\yii\base\Event $event) {
@@ -153,6 +153,22 @@ class Poll extends Plugin
             if ($service->isAnAnswerMatrix($event->sender)) {
                 $event->isValid = $service->validateAnswerMatrixField($event->sender);
             }
+        });
+
+        // Optionally block removal of the plugin to prevent data loss
+        $me = $this;
+        Event::on(Plugins::class, Plugins::EVENT_BEFORE_UNINSTALL_PLUGIN, static function (PluginEvent $event) use ($me) {
+            if ($event->plugin === $me && self::$plugin->settings->blockPluginRemoval) {
+                $settingsUrl = UrlHelper::url('settings/plugins/poll');
+
+                echo <<<HTML
+<h1>Warning</h1>
+<p>You are trying to remove the Poll plugin, but have blocked removal in the settings panel.</p>
+<p>Proceed by disabling the block in the <a href="$settingsUrl">plugin settings</a> and then try again.</p>
+<p><strong>Because removing the plugin also removes all submitted data, you might want to backup your database first.</strong></p>
+HTML;
+            }
+            die('');
         });
 
         // Do something after we're installed
@@ -175,12 +191,6 @@ class Poll extends Plugin
          * Craft::error(): record a fatal error that should be investigated as soon as possible.
          *
          * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
-         *
-         * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
-         * the category to the method (prefixed with the fully qualified class name) where the constant appears.
-         *
-         * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
-         * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
          *
          * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
          */
@@ -212,6 +222,10 @@ class Poll extends Plugin
      * block on the settings page.
      *
      * @return string The rendered settings HTML
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
      */
     protected function settingsHtml(): string
     {
@@ -222,4 +236,7 @@ class Poll extends Plugin
             ]
         );
     }
+
+
+
 }
