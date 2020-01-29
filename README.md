@@ -1,6 +1,9 @@
+<img src="resources/img/plugin-logo.png" width="64" height="64" align="left" style="margin-right: 30px">
+
 # Poll plugin for Craft CMS 3.x
 
 **For installation and usage please read the docs at [io.24hoursmedia.com](https://io.24hoursmedia.com/craftcms-poll)**
+
 
 ## Requirements
 
