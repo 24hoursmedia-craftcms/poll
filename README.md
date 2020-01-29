@@ -16,7 +16,7 @@ Download and install poll in the Craft CMS plugin store, or:
 
 Composer:
 
-    twentyfourhoursmedia/poll.
+    composer require twentyfourhoursmedia/poll
 
 ## Post-installation setup
 
