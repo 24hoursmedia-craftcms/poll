@@ -42,11 +42,11 @@ class Settings extends Model
 
 
     /**
-     * Some field model attribute
+     * Blocks removal of the plugin as a safety measure
      *
-     * @var string
+     * @var bool
      */
-    public $someAttribute = 'Some Default';
+    public $blockPluginRemoval = true;
 
     // Public Methods
     // =========================================================================
@@ -64,8 +64,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
+            ['blockPluginRemoval', 'boolean']
         ];
     }
 }

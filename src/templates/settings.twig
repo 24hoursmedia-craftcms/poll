@@ -17,8 +17,23 @@
 
 {% do view.registerAssetBundle("twentyfourhoursmedia\\poll\\assetbundles\\poll\\PollAsset") %}
 
+<h2>Settings</h2>
+
+{{ forms.lightSwitchField({
+    label: 'Block plugin uninstall',
+    instructions: 'Prevents removal of the plugin. Removing the plugin will also remove all of the submitted data, so you might want to backup first.',
+    id: 'blockPluginRemoval',
+    name: 'blockPluginRemoval',
+    on: settings['blockPluginRemoval']
+    })
+}}
+
+<hr/>
+
+<h2>Additional setup</h2>
+
 <p>
-    {{ "You can setup sections and fields in the Poll Utility section" }}. <a href="{{ url('utilities/poll-poll-utility') }}">{{ "Go there" | t }} &raquo;</a>
+    <strong>{{ "You can setup sections and fields in the Poll Utility section" }}. <a href="{{ url('utilities/poll-poll-utility') }}">{{ "Go there" | t }} &raquo;</a></strong>
 </p>
 
 <p>

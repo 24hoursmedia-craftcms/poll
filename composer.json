@@ -11,7 +11,7 @@
         "poll"
     ],
     "support": {
-        "docs": "https://github.com/24hoursmedia-craftcms/poll/blob/master/README.md",
+        "docs": "https://io.24hoursmedia.com/craftcms-poll",
         "issues": "https://github.com/24hoursmedia-craftcms/poll/issues"
     },
     "license": "proprietary",
@@ -31,7 +31,7 @@
         }
     },
     "extra": {
-        "name": "poll",
+        "name": "Poll",
         "handle": "poll",
         "hasCpSettings": true,
         "hasCpSection": false,
