@@ -1,0 +1,44 @@
+{
+    "name": "twentyfourhoursmedia/poll",
+    "description": "poll plugin for craft 3.x",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "poll"
+    ],
+    "support": {
+        "docs": "https://github.com/24hoursmedia-craftcms/poll/blob/master/README.md",
+        "issues": "https://github.com/24hoursmedia-craftcms/poll/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "24hoursmedia",
+            "homepage": "https://www.24hoursmedia.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "twentyfourhoursmedia\\poll\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "poll",
+        "handle": "poll",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/24hoursmedia-craftcms/poll/master/CHANGELOG.md",
+        "components": {
+            "pollService": "twentyfourhoursmedia\\poll\\services\\PollService"
+        },
+        "class": "twentyfourhoursmedia\\poll\\Poll"
+    }
+}

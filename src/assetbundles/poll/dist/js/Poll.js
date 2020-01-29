@@ -1,0 +1,11 @@
+/**
+ * poll plugin for Craft CMS
+ *
+ * poll JS
+ *
+ * @author    24hoursmedia
+ * @copyright Copyright (c) 2020 24hoursmedia
+ * @link      https://www.24hoursmedia.com
+ * @package   Poll
+ * @since     1.0.0
+ */

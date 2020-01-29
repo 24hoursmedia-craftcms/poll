@@ -1,0 +1,52 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * poll plugin for Craft CMS
+ *
+ * PollUtility Utility Content
+ *
+ * @author    24hoursmedia
+ * @copyright Copyright (c) 2020 24hoursmedia
+ * @link      https://www.24hoursmedia.com
+ * @package   Poll
+ * @since     1.0.0
+ */
+#}
+{# @var allow_admin_changes bool #}
+{# @var setup_ok bool #}
+{# @var setup_report \twentyfourhoursmedia\poll\models\SetupReport #}
+
+<h1>Poll Utility</h1>
+
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@twentyfourhoursmedia/poll/assetbundles/pollutilityutility/dist', true) ~ '/img/PollUtility-icon.svg' %}
+{#
+<img src="{{ iconUrl }}" height="64" width="64" />
+#}
+<hr/>
+
+<p><strong>The setup of Craft appears {{ setup_ok ? 'OK' : 'NOT OK' }}</strong></p>
+<p>Checks:</p>
+<ul>
+    {% for item in setup_report.items %}
+    <li><strong>{{ item.level }}:</strong> {{ item.description }}
+    {% if item.fix %}(<small style="font-size: 80%;">{{ item.fix }}</small>){% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+
+{% if setup_ok %}
+    <p><strong>You can now add the field '{{ selectPollFieldHandle }}' to your craft entries to select a poll, or create a poll for that entry.</strong></p>
+{% endif %}
+
+<hr/>
+{% if allow_admin_changes %}
+<form method="post" action="{{ url('/actions/poll/install/setup') }}">
+    {{ csrfInput() }}
+    <button type="submit"  class="btn submit">Setup content sections and fields</button>
+    {{ redirectInput(url('utilities/poll-poll-utility')) }}
+</form>
+{% else %}
+    <p>This environment needs to be configured to allow admin changes to setup entries and fields.</p>
+    <button type="submit"  class="btn submit disabled" disabled="disabled">Setup content sections and fields</button>
+{% endif %}

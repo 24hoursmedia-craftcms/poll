@@ -1,0 +1,53 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * poll plugin for Craft CMS 3.x
+ *
+ * poll Settings.twig
+ *
+ * @author    24hoursmedia
+ * @copyright Copyright (c) 2020 24hoursmedia
+ * @link      https://www.24hoursmedia.com
+ * @package   Poll
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("twentyfourhoursmedia\\poll\\assetbundles\\poll\\PollAsset") %}
+
+<p>
+    {{ "You can setup sections and fields in the Poll Utility section" }}. <a href="{{ url('utilities/poll-poll-utility') }}">{{ "Go there" | t }} &raquo;</a>
+</p>
+
+<p>
+    If you have not yet setup the fields, and want to change the default names of handles, you can do so by placing a
+    poll.php in the /config directory with customized settings:
+</p>
+
+<pre><code>
+// example config file to override section handles etc
+// these settings would override the settings set from the CP
+return [
+    // configure handles for installation
+
+    // the section containing polls
+    // default: pollSection
+    'sectionHandle' => '',
+
+    // the field that is generated to select a poll
+    // default: selectedPoll
+    'selectPollFieldHandle' => '',
+
+    // the matrix that contains 'answers'
+    // default: pollAnswerMatrix
+    'answerMatrixFieldHandle' => '',
+
+    // within the answerMatrixFieldHandle, a block is created that will contain the answers.
+    // this is the handle for that block.
+    // default: answer
+    'matrixBlockAnswerHandle' => ''
+
+];
+</code></pre>
