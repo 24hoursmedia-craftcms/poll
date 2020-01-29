@@ -1,6 +1,6 @@
 # Poll plugin for Craft CMS 3.x
 
-*For installation and usage please read the docs at [io.24hoursmedia.com](https://io.24hoursmedia.com/craftcms-poll)*
+**For installation and usage please read the docs at [io.24hoursmedia.com](https://io.24hoursmedia.com/craftcms-poll)**
 
 ## Requirements
 
