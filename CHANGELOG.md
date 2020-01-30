@@ -1,6 +1,6 @@
 # Poll Changelog
 
-## 1.0.2 - 2020-01-29
+## 1.0.3 - 2020-01-29
 
 ### Fixed
 - Poll plugin blocked removal of other plugins
