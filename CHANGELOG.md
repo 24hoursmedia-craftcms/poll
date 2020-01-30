@@ -2,7 +2,7 @@
 
 ## 1.0.2 - 2020-01-29
 
-### Modified
+### Fixed
 - Poll plugin blocked removal of other plugins
 
 ## 1.0.1 - 2020-01-29
