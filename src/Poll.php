@@ -167,8 +167,9 @@ class Poll extends Plugin
 <p>Proceed by disabling the block in the <a href="$settingsUrl">plugin settings</a> and then try again.</p>
 <p><strong>Because removing the plugin also removes all submitted data, you might want to backup your database first.</strong></p>
 HTML;
+                die('');
             }
-            die('');
+
         });
 
         // Do something after we're installed
