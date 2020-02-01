@@ -36,6 +36,7 @@ class InstallService extends Component
      * @throws \Throwable
      */
     private function ensureSelectPollField($validateOnly, SetupReport $report) {
+
         $config = Poll::$plugin->pollService->getConfig();
         $fieldHandle = $config[PollService::CFG_FIELD_SELECT_POLL_HANDLE];
 

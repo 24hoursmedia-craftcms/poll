@@ -12,8 +12,12 @@
  * @since     1.0.0
  */
 #}
+{# @var craft \craft\web\twig\variables\CraftVariable #}
 
-{% extends "_layouts/cp" %}
+{% set elementType = 'twentyfourhoursmedia\\poll\\elements\\Poll' %}
+{% extends "_layouts/elementindex" %}
+
+
 {% import "_includes/forms" as forms %}
 
 {% do view.registerAssetBundle("twentyfourhoursmedia\\poll\\assetbundles\\poll\\PollAsset") %}
@@ -24,7 +28,7 @@
 {% set docsUrl = "???" %}
 
 {# The title of this CP section #}
-{% set title = "Polls" %}
+{% set title = "Poll Results" %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('poll') %}
@@ -37,23 +41,16 @@
     "test2": { label: "Test2"|t('poll'), url: url(pluginCpUrl ~ '/test2') },
 
 } %}
-{% set selectedSubnavItem = 'test1' %}
 
-{% set crumbs = [
-    { label: "poll", url: url(pluginCpUrl) },
-    { label: "Test1"|t('poll'), url: url(pluginCpUrl ~ '/test1') },
-] %}
 
-{# Content that should appear in the page header#}
-{% set extraPageHeaderHtml %}
-    <div class="buttons">
-        <a href="{{ pluginCpUrl }}" class="btn submit add icon">{{ "Click Me!"|t('poll') }}</a>
-    </div>
-{% endset %}
+
 
 {# The content of the CP Section#}
 {% set content %}
     <h2><img src="{{ iconUrl }}" height="32" width="32" align="left" /> {{ "Polls"|t('poll') }}</h2>
 
     <p class="textline"></p>
+
+
+
 {% endset %}

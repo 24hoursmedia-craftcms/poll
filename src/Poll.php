@@ -12,6 +12,8 @@ namespace twentyfourhoursmedia\poll;
 
 use Craft;
 use craft\helpers\UrlHelper;
+use craft\services\Elements;
+use twentyfourhoursmedia\poll\services\ResultService;
 use yii\base\Event;
 use craft\elements\Entry;
 use craft\fields\Matrix;
@@ -29,6 +31,7 @@ use twentyfourhoursmedia\poll\variables\PollVariable;
 use twentyfourhoursmedia\poll\twigextensions\PollTwigExtension;
 use twentyfourhoursmedia\poll\models\Settings;
 use twentyfourhoursmedia\poll\utilities\PollUtility as PollUtilityUtility;
+use twentyfourhoursmedia\poll\elements\Poll as PollElement;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -44,7 +47,8 @@ use twentyfourhoursmedia\poll\utilities\PollUtility as PollUtilityUtility;
  * @package   Poll
  * @since     1.0.0
  *
- * @property  PollServiceService $pollService
+ * @property  PollService $pollService
+ * @property  ResultService $resultService
  * @property  InstallService $installService
  * @property  Settings $settings
  * @method    Settings getSettings()
@@ -92,6 +96,7 @@ class Poll extends Plugin
 
         $this->setComponents([
             'installService' => InstallService::class,
+            'resultService' => ResultService::class,
         ]);
 
 
@@ -108,13 +113,22 @@ class Poll extends Plugin
         );
 
         // Register our CP routes
-        //Event::on(
-        //    UrlManager::class,
-        //    UrlManager::EVENT_REGISTER_CP_URL_RULES,
-        //    function (RegisterUrlRulesEvent $event) {
-        //        $event->rules['cpActionTrigger1'] = 'poll/answer/do-something';
-        //    }
-        //);
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+             //   $event->rules['cpActionTrigger1'] = 'poll/download/poll-data';
+            }
+        );
+
+        // Register Poll elements
+        Event::on(
+            Elements::class,
+            Elements::EVENT_REGISTER_ELEMENT_TYPES,
+            function (RegisterComponentTypesEvent $event) {
+                $event->types[] = PollElement::class;
+            }
+        );
 
         // Register our utilities
         Event::on(
