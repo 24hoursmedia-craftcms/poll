@@ -1,0 +1,59 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * poll plugin for Craft CMS 3.x
+ *
+ * poll index.twig
+ *
+ * @author    a
+ * @copyright Copyright (c) 2020 a
+ * @link      https://www.example.com
+ * @package   Poll
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("twentyfourhoursmedia\\poll\\assetbundles\\poll\\PollAsset") %}
+{#
+{% do view.registerAssetBundle("twentyfourhoursmedia\\poll\\assetbundles\\test1cpsection\\Test1CPSectionAsset") %}
+#}
+{# Link for the ? icon at the bottom of the page #}
+{% set docsUrl = "???" %}
+
+{# The title of this CP section #}
+{% set title = "Polls" %}
+
+{# The URL to this plugin's base CP section #}
+{% set pluginCpUrl = url('poll') %}
+
+{# Get a URL to an image in our AssetBundle #}
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@twentyfourhoursmedia/poll/assetbundles/poll/dist', true) ~ '/img/Poll-icon.svg' %}
+
+{% set subnav = {
+    "test1": { label: "Test1"|t('poll'), url: url(pluginCpUrl ~ '/test1') },
+    "test2": { label: "Test2"|t('poll'), url: url(pluginCpUrl ~ '/test2') },
+
+} %}
+{% set selectedSubnavItem = 'test1' %}
+
+{% set crumbs = [
+    { label: "poll", url: url(pluginCpUrl) },
+    { label: "Test1"|t('poll'), url: url(pluginCpUrl ~ '/test1') },
+] %}
+
+{# Content that should appear in the page header#}
+{% set extraPageHeaderHtml %}
+    <div class="buttons">
+        <a href="{{ pluginCpUrl }}" class="btn submit add icon">{{ "Click Me!"|t('poll') }}</a>
+    </div>
+{% endset %}
+
+{# The content of the CP Section#}
+{% set content %}
+    <h2><img src="{{ iconUrl }}" height="32" width="32" align="left" /> {{ "Polls"|t('poll') }}</h2>
+
+    <p class="textline"></p>
+{% endset %}

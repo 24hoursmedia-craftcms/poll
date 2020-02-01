@@ -2,7 +2,7 @@
     "name": "twentyfourhoursmedia/poll",
     "description": "poll plugin for craft 3.x",
     "type": "craft-plugin",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "keywords": [
         "craft",
         "cms",
@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": "~7.0",
         "craftcms/cms": "^3.0.0-RC1"
     },
     "autoload": {
@@ -34,7 +34,7 @@
         "name": "Poll",
         "handle": "poll",
         "hasCpSettings": true,
-        "hasCpSection": false,
+        "hasCpSection": true,
         "changelogUrl": "https://raw.githubusercontent.com/24hoursmedia-craftcms/poll/master/CHANGELOG.md",
         "components": {
             "pollService": "twentyfourhoursmedia\\poll\\services\\PollService"
