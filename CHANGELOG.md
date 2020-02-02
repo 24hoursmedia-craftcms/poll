@@ -6,6 +6,7 @@
 - Added control panel section for polls
 - Download raw data for polls for marketing analysis / segmentation
 
+
 ## 1.0.3 - 2020-01-29
 
 ### Fixed
