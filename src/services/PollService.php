@@ -17,6 +17,8 @@ use craft\elements\MatrixBlock;
 use craft\fields\Matrix;
 use craft\helpers\Db;
 use craft\models\Section;
+use craft\elements\User;
+
 use twentyfourhoursmedia\poll\models\PollResults;
 use twentyfourhoursmedia\poll\Poll;
 
@@ -356,5 +358,42 @@ class PollService extends Component
         return PollAnswer::deleteAll(['pollId' => $entry->id]);
     }
 
-
+	/**
+	 * Grab all users that votes on a specific poll or answer
+	 * 
+	 * param $pollOrPollId
+	 * param $answerOrAnswerId
+	 * param $limit
+	 * return User 
+	 *
+	 */ 
+	 
+	public function getUsers($pollOrPollId, $answerOrAnswerId = null, $limit = 10) {
+		
+		$pollId = $pollOrPollId instanceof Entry ? $pollOrPollId->id : $pollOrPollId;
+		$answerOrAnswerId = $answerOrAnswerId instanceof MatrixBlock ? $answerOrAnswerId->id : $answerOrAnswerId;
+						
+        $userIds = (new Query())
+            ->select('userId')
+            ->from(PollAnswer::tableName())
+            ->where(['pollId' => $pollId])
+            ->andWhere(['not', ['userId' => null]]);
+            
+        if($answerOrAnswerId) {
+	        $userIds->andWhere(['answerId' => $answerOrAnswerId]);
+        }
+        
+        $result = $userIds->limit($limit)->all();
+      
+        $ids = [];
+        foreach($result as $userId) {
+	        $ids[] = $userId['userId'];
+        }
+        
+        $users = User::find()
+        	->id($ids)
+        	->all();
+        	
+		return $users;
+	}
 }

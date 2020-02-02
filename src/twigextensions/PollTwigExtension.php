@@ -78,6 +78,7 @@ class PollTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('getPollResults', [$this, 'getPollResults']),
             new \Twig_SimpleFunction('pollUid', [$this, 'createUniqid']),
             new \Twig_SimpleFunction('getPoll', [$this, 'getPoll']),
+            new \Twig_SimpleFunction('getUsers', [$this, 'getUsers']),
         ];
     }
 
@@ -173,4 +174,16 @@ HTML;
     {
         return Poll::$plugin->pollService->getPoll($id);
     }
+    
+     /**
+     * Returns all users that voted on a poll, or specific answer
+     * @param $poll
+     * @param $answer
+     * @param $limit
+     * @return User
+     */   
+    public function getUsers($poll, $answer, $limit)
+    {
+        return Poll::$plugin->pollService->getUsers($poll, $answer, $limit);
+    }    
 }
