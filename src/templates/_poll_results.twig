@@ -1,0 +1,44 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{# @var poll \craft\elements\Entry #}
+{# @var simple_results \twentyfourhoursmedia\poll\models\PollResults %}
+{# @var service \twentyfourhoursmedia\poll\services\PollService #}
+
+{% set element = poll %}
+{% set docTitle = 'Poll results' %}
+{% extends '_layouts/cp.html' %}
+
+{% block main %}
+    <small><a href="{{ url('poll') }}">&laquo; {{ 'Back' | t('poll') }}</a></small>
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'Results for poll' | t('poll') }} ID={{ poll.id }}: {{ poll.title }}</h1>
+
+    <div>
+      <table class="table">
+          <tr>
+              <th>{{ 'Total votes' | t('poll') }}:</th>
+              <td>{{ simple_results.count }}</td>
+          </tr>
+          {% set by_answer = simple_results.byAnswer %}
+          {% for result_item in simple_results.byAnswer %}
+              {% set answer = result_item.answer %}
+              <tr>
+                  <th>{{ answer.label ?? '(unlabeled)' }}</th>
+                  <td>{{ result_item.count }} votes</td>
+              </tr>
+          {% endfor %}
+      </table>
+    </div>
+
+    <h2>{{ 'Data download' | t('poll') }}</h2>
+    <p>{{ 'You can download raw data here for further marketing analysis or targeting.' | t }}</p>
+    <div>
+        <form method="post" action="{{ actionUrl('poll/download/poll-data?id=' ~ poll.id) }}">
+            {{ getCsrfInput() }}
+            <button type="submit" class="btn submit">Download data in CSV format</button>
+        </form>
+    </div>
+
+{% endblock %}

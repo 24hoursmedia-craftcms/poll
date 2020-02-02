@@ -24,10 +24,14 @@ class InstallController extends Controller
      *
      * @return mixed
      * @throws BadRequestHttpException
+     * @throws \Throwable
+     * @throws \craft\errors\MissingComponentException
+     * @throws \craft\errors\SectionNotFoundException
      * @throws \yii\web\ForbiddenHttpException
      */
     public function actionSetup()
     {
+        $this->requireCpRequest();
         $this->requireAdmin(true);
         if (Craft::$app->getRequest()->getMethod() !== 'POST') {
             throw new BadRequestHttpException('Post method required');

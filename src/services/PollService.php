@@ -16,6 +16,7 @@ use craft\elements\Entry;
 use craft\elements\MatrixBlock;
 use craft\fields\Matrix;
 use craft\helpers\Db;
+use craft\models\Section;
 use twentyfourhoursmedia\poll\models\PollResults;
 use twentyfourhoursmedia\poll\Poll;
 
@@ -201,12 +202,27 @@ class PollService extends Component
      */
     public function getPoll($pollOrPollId, $status = null)
     {
+        if (!$pollOrPollId) {
+            return null;
+        }
         if ($pollOrPollId instanceof Entry) {
-            return $pollOrPollId->section->handle === $this->getConfigOption(self::CFG_POLL_SECTION_HANDLE) ? $pollOrPollId : null;
+            return $this->isAPollEntry($pollOrPollId) ? $pollOrPollId : null;
         }
         return Entry::find()
             ->section($this->getConfigOption(PollService::CFG_POLL_SECTION_HANDLE))
             ->id($pollOrPollId)->status($status)->one();
+    }
+
+    /**
+     * Returns the section(s) that have polls
+     * @return Section[]
+     */
+    public function getPollSections() : array
+    {
+        $sections = array_map(function(string $handle) {
+            return Craft::$app->sections->getSectionByHandle($handle);
+        }, [$this->getConfigOption(self::CFG_POLL_SECTION_HANDLE)]);
+       return array_filter($sections);
     }
 
     /**
@@ -221,12 +237,30 @@ class PollService extends Component
     }
 
     /**
+     * Gets answer labels
+     *
+     * @param array $pollOrPollIds
+     * @return array = [232 => 'label 1', 443 => 'label 2']
+     */
+    public function getAnswerLabelsIndexedById(array $pollOrPollIds) {
+        $labels = [];
+        $polls = array_map([$this, 'getPoll'], $pollOrPollIds);
+        foreach ($polls as $poll) {
+            $answers = $this->getAnswers($poll);
+            foreach ($answers as $answer) {
+                $labels[$answer->id] = $answer->label ?? '(no label)';
+            }
+        }
+        return $labels;
+    }
+
+    /**
      * @param $pollOrPollId
      * @return PollResults | null
      */
     public function getResults($pollOrPollId)
     {
-        $poll = $this->getPoll($pollOrPollId->id, null);
+        $poll = $this->getPoll($pollOrPollId, null);
         if (!$poll) {
             return null;
         }
