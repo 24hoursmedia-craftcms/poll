@@ -1,11 +1,10 @@
 # Poll Changelog
 
-## 1.1.0 - 2020-02-02
+## 1.1.2 - 2020-02-02
 
 ### Added
 - Added control panel section for polls
 - Download raw data for polls for marketing analysis / segmentation
-
 
 ## 1.0.3 - 2020-01-29
 
