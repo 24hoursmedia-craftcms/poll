@@ -1,5 +1,16 @@
 # Poll Changelog
 
+## 1.2.0 - 2020-02-05
+
+### Added
+- Get participating users for a poll in twig/frontend
+- Get user votes by answer in twig/frontent
+- Added percentage in poll results by answer
+
+### Modified
+- Added a craft.poll variable that exposes public methods to manage and get data from a poll
+- Added getResults and more to craft.poll, replacing legacy twig filters
+
 ## 1.1.2 - 2020-02-02
 
 ### Added

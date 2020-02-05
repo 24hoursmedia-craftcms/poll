@@ -75,8 +75,10 @@ class PollTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('generatePollAnswerFieldName', [$this, 'generatePollAnswerFieldName']),
             new \Twig_SimpleFunction('generatePollAnswerFieldValue', [$this, 'generatePollAnswerFieldValue']),
             new \Twig_SimpleFunction('pollInputs', [$this, 'getPollInputs'], ['is_safe' => ['html']]),
+            // deprecated:
             new \Twig_SimpleFunction('getPollResults', [$this, 'getPollResults']),
             new \Twig_SimpleFunction('pollUid', [$this, 'createUniqid']),
+            // deprecated:
             new \Twig_SimpleFunction('getPoll', [$this, 'getPoll']),
         ];
     }
@@ -138,6 +140,12 @@ HTML;
         return (string)($answer->uid);
     }
 
+    /**
+     * @deprecated
+     *
+     * @param $poll
+     * @return bool
+     */
     public function participatedInPoll($poll)
     {
         return Poll::$plugin->pollService->hasParticipated($poll);
@@ -145,11 +153,13 @@ HTML;
 
     /**
      * @param $pollOrPollId
+     * @param array $opts
      * @return PollResults | null
+     * @deprecated
      */
-    public function getPollResults($pollOrPollId)
+    public function getPollResults($pollOrPollId, array $opts = [])
     {
-        return Poll::$plugin->pollService->getResults($pollOrPollId);
+        return Poll::$plugin->pollService->getResults($pollOrPollId, $opts);
     }
 
     /**

@@ -13,6 +13,7 @@ namespace twentyfourhoursmedia\poll;
 use Craft;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
+use twentyfourhoursmedia\poll\services\Facade;
 use twentyfourhoursmedia\poll\services\ResultService;
 use yii\base\Event;
 use craft\elements\Entry;
@@ -50,6 +51,7 @@ use twentyfourhoursmedia\poll\elements\Poll as PollElement;
  * @property  PollService $pollService
  * @property  ResultService $resultService
  * @property  InstallService $installService
+ * @property  Facade $facade
  * @property  Settings $settings
  * @method    Settings getSettings()
  */
@@ -97,6 +99,7 @@ class Poll extends Plugin
         $this->setComponents([
             'installService' => InstallService::class,
             'resultService' => ResultService::class,
+            'facade' => Facade::class
         ]);
 
 
@@ -140,16 +143,15 @@ class Poll extends Plugin
         );
 
         // Register our variables
-
-//        Event::on(
-//            CraftVariable::class,
-//            CraftVariable::EVENT_INIT,
-//            function (Event $event) {
-//                /** @var CraftVariable $variable */
-//                $variable = $event->sender;
-//                $variable->set('poll', PollVariable::class);
-//            }
-//        );
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('poll', PollVariable::class);
+            }
+        );
 
 
         // Remove poll answer entries if a poll entry is deleted
