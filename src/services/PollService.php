@@ -14,10 +14,13 @@ use craft\db\Query;
 use craft\elements\db\MatrixBlockQuery;
 use craft\elements\Entry;
 use craft\elements\MatrixBlock;
+use craft\elements\User;
 use craft\fields\Matrix;
 use craft\helpers\Db;
 use craft\models\Section;
+use craft\services\Users;
 use twentyfourhoursmedia\poll\models\PollResults;
+use twentyfourhoursmedia\poll\models\ResultByAnswer;
 use twentyfourhoursmedia\poll\Poll;
 
 use Craft;
@@ -256,11 +259,18 @@ class PollService extends Component
 
 
     const OPTS_GET_RESULTS = [
-
+        // set to true to include the users that have participated, for the total poll and by each answer
+        'with_users' => false,
+        // set to true to return only user ids. saves memory
+        'user_id_only' => false,
+        // limit on the amount of users returned, to save memory
+        'limit_users' => 1000
     ];
 
     /**
      * Generate simple results
+     * @TODO move to
+     * @see ResultService
      *
      * @param $pollOrPollId
      * @param array $opts = self::OPTS_GET_RESULTS
@@ -290,13 +300,47 @@ class PollService extends Component
 
         foreach ($this->getAnswers($pollOrPollId) as $answer) {
             $count = $indexedAnswers[$answer->id] ?? 0;
-            $percent = $model->count > 0 ? 100 * $count / $model->count : null;
-            $model->byAnswer[] = [
-                'count' => $count,
-                'percent' => $percent,
-                'answer' => $answer
-            ];
+            $resultByAnswer = new ResultByAnswer();
+            $resultByAnswer->count = $count;
+            $resultByAnswer->percent = $model->count > 0 ? 100 * $count / $model->count : null;
+            $resultByAnswer->answer = $answer;
+            $model->byAnswer[] = $resultByAnswer;
         }
+
+        // enrich with users?
+        if ($opts['with_users']) {
+            $records = (new Query())
+                ->select('answerId, userId')
+                ->from(PollAnswer::tableName())
+                ->where('pollId=:pollId')->addParams(['pollId' => $poll->id])
+                ->andWhere('userId IS NOT NULL')
+                ->addGroupBy('answerId')
+                ->indexBy('userId')
+                ->limit($opts['limit_users'])
+                ->all();
+            $userIds = array_keys($records);
+            $usersByAnswerId = [];
+            foreach ($records as $record) {
+                $usersByAnswerId[$record['answerId']][] = (int)$record['userId'];
+            }
+            // now enrich the data
+            $model->userIds = $userIds;
+            foreach ($model->byAnswer as $answer) {
+                $answer->userIds = $usersByAnswerId[$answer->answer->id] ?? [];
+            }
+            // hydrate result with Users models also?
+            if (false === $opts['user_id_only']) {
+                $users = User::find()->id($userIds)->anyStatus()->indexBy('id')->all();
+                $model->users = array_values($users);
+                foreach ($model->byAnswer as $answer) {
+                    $answer->users = array_values(
+                        array_intersect_key($users, array_flip($answer->userIds))
+                    );
+                }
+            }
+
+        }
+
         return $model;
     }
 

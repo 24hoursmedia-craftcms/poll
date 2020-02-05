@@ -2,24 +2,32 @@
 /**
  * Created by PhpStorm
  * User: eapbachman
- * Date: 22/01/2020
+ * Date: 05/02/2020
  */
 
 namespace twentyfourhoursmedia\poll\models;
 
 
-use craft\base\Model;
+use craft\elements\MatrixBlock;
 use craft\web\User;
 
-class PollResults extends Model
+class ResultByAnswer
 {
 
+    /**
+     * @var int
+     */
     public $count = 0;
 
     /**
-     * @var ResultByAnswer[]
+     * @var null | float
      */
-    public $byAnswer = [];
+    public $percent = null;
+
+    /**
+     * @var MatrixBlock
+     */
+    public $answer;
 
     /**
      * An array of user id's that have participated in the poll

@@ -35,6 +35,16 @@ class Facade extends Component
         $this->service = Poll::$plugin->pollService;
     }
 
+    /**
+     * Returns a Poll entry, regardless of wether it is disabled or not
+     *
+     * @param $pollOrId
+     * @return Entry|null
+     */
+    public function getPoll($pollOrId)
+    {
+        return $this->service->getPoll($pollOrId);
+    }
 
     /**
      * Gets quick results for a poll
