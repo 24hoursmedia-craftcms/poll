@@ -254,18 +254,29 @@ class PollService extends Component
         return $labels;
     }
 
+
+    const OPTS_GET_RESULTS = [
+
+    ];
+
     /**
+     * Generate simple results
+     *
      * @param $pollOrPollId
+     * @param array $opts = self::OPTS_GET_RESULTS
      * @return PollResults | null
      */
-    public function getResults($pollOrPollId)
+    public function getResults($pollOrPollId, $opts = [])
     {
+        $opts+= self::OPTS_GET_RESULTS;
         $poll = $this->getPoll($pollOrPollId, null);
         if (!$poll) {
             return null;
         }
+
         $model = new PollResults();
-        $model->count = PollAnswer::find()->andWhere('pollId=:pollId', ['pollId' => $poll->id])->count();
+        $model->count = (int)PollAnswer::find()->andWhere('pollId=:pollId', ['pollId' => $poll->id])->count();
+
         $byAnswers = (new Query())
             ->select('answerId, count(id) as total')
             ->from(PollAnswer::tableName())
@@ -276,8 +287,15 @@ class PollService extends Component
             $carry[$item['answerId']] = (int)$item['total'];
             return $carry;
         }, []);
+
         foreach ($this->getAnswers($pollOrPollId) as $answer) {
-            $model->byAnswer[] = ['answer' => $answer, 'count' => $indexedAnswers[$answer->id] ?? 0];
+            $count = $indexedAnswers[$answer->id] ?? 0;
+            $percent = $model->count > 0 ? 100 * $count / $model->count : null;
+            $model->byAnswer[] = [
+                'count' => $count,
+                'percent' => $percent,
+                'answer' => $answer
+            ];
         }
         return $model;
     }
