@@ -5,6 +5,7 @@
 ### Added
 - Get participating users for a poll in twig/frontend
 - Get user votes by answer in twig/frontent
+- Added percentage in poll results by answer
 
 ### Modified
 - Added a craft.poll variable that exposes public methods to manage and get data from a poll
