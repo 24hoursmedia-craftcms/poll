@@ -1,5 +1,10 @@
 # Poll Changelog
 
+## 1.2.1 - 2020-02-06
+
+### Fixed
+- MySQL 5.7 compatibility
+
 ## 1.2.0 - 2020-02-05
 
 ### Added

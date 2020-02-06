@@ -291,7 +291,7 @@ class PollService extends Component
             ->select('answerId, count(id) as total')
             ->from(PollAnswer::tableName())
             ->where('pollId=:pollId')->addParams(['pollId' => $poll->id])
-            ->addGroupBy('answerId')
+            ->addGroupBy(['answerId'])
             ->all();
         $indexedAnswers = array_reduce($byAnswers, static function ($carry, $item) {
             $carry[$item['answerId']] = (int)$item['total'];
@@ -314,7 +314,7 @@ class PollService extends Component
                 ->from(PollAnswer::tableName())
                 ->where('pollId=:pollId')->addParams(['pollId' => $poll->id])
                 ->andWhere('userId IS NOT NULL')
-                ->addGroupBy('answerId')
+                ->addGroupBy(['answerId', 'userId'])
                 ->indexBy('userId')
                 ->limit($opts['limit_users'])
                 ->all();
