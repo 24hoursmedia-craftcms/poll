@@ -314,7 +314,8 @@ class PollService extends Component
                 ->from(PollAnswer::tableName())
                 ->where('pollId=:pollId')->addParams(['pollId' => $poll->id])
                 ->andWhere('userId IS NOT NULL')
-                ->addGroupBy(['answerId', 'userId'])
+                ->addGroupBy(['answerId', 'userId', 'dateCreated'])
+                ->addOrderBy('dateCreated DESC')
                 ->indexBy('userId')
                 ->limit($opts['limit_users'])
                 ->all();

@@ -1,5 +1,10 @@
 # Poll Changelog
 
+## 1.2.2 - 2020-02-06
+
+### Fixed
+- Fixed ordering of users by participation date
+
 ## 1.2.1 - 2020-02-06
 
 ### Fixed
