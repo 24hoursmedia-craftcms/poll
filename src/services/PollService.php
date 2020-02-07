@@ -19,6 +19,8 @@ use craft\fields\Matrix;
 use craft\helpers\Db;
 use craft\models\Section;
 use craft\services\Users;
+use twentyfourhoursmedia\poll\events\PollEvents;
+use twentyfourhoursmedia\poll\events\PollSubmittedEvent;
 use twentyfourhoursmedia\poll\models\PollResults;
 use twentyfourhoursmedia\poll\models\ResultByAnswer;
 use twentyfourhoursmedia\poll\Poll;
@@ -195,7 +197,15 @@ class PollService extends Component
             ]);
             $record->save();
         }
-        return false;
+
+
+        $poll->trigger(PollEvents::POLL_SUBMITTED, new PollSubmittedEvent([
+            'poll' => $poll,
+            'user' => $user,
+            'answers' => $answers
+        ]));
+
+        return true;
     }
 
     /**
