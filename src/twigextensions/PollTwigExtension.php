@@ -159,7 +159,7 @@ HTML;
      */
     public function getPollResults($pollOrPollId, array $opts = [])
     {
-        return Poll::$plugin->pollService->getResults($pollOrPollId, $opts);
+        return Poll::$plugin->facade->getResults($pollOrPollId, $opts);
     }
 
     /**

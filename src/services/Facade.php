@@ -29,10 +29,22 @@ class Facade extends Component
      */
     protected $service;
 
+    /**
+     * @var ResultService
+     */
+    protected $results;
+
     public function __construct($config = [])
     {
         parent::__construct($config);
         $this->service = Poll::$plugin->pollService;
+    }
+
+    /**
+     * @return ResultService
+     */
+    protected function resultsService() {
+        return Poll::$plugin->resultService;
     }
 
     /**
@@ -56,7 +68,7 @@ class Facade extends Component
      * @return PollResults | null
      */
     public function getResults($pollOrId, $opts = []) {
-        return $this->service->getResults($pollOrId, $opts);
+        return $this->resultsService()->getResults($pollOrId, $opts);
     }
 
     /**
