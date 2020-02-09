@@ -10,6 +10,6 @@ namespace twentyfourhoursmedia\poll\events;
 
 final class PollEvents
 {
-    const POLL_SUBMITTED = PollSubmittedEvent::NAME;
+    const POLL_SUBMITTED = 'POLL_SUBMIT_EVENT';
 
 }

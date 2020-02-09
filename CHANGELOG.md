@@ -1,5 +1,14 @@
 # Poll Changelog
 
+## 1.2.3 - 2020-02-09
+
+### Added
+- Added a PollSubmittedEvent to hook into caching or do external processing - see https://io.24hoursmedia.com/craftcms-poll/poll-events
+
+### Modified
+- When retrieving results, user count now refers to num users per answer instead of poll total
+- Optimized database indices
+
 ## 1.2.2 - 2020-02-06
 
 ### Fixed

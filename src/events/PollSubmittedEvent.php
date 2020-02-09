@@ -20,8 +20,6 @@ use yii\base\Event;
 class PollSubmittedEvent extends Event
 {
 
-    const NAME = 'POLL_SUBMIT_EVENT';
-
     /**
      * @var Entry
      */
