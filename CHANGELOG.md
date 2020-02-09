@@ -1,5 +1,9 @@
 # Poll Changelog
 
+## 1.2.4 - 2020-02-09
+### Fixed
+- fixed installation button for content in craft 3.4
+
 ## 1.2.3 - 2020-02-09
 
 ### Added

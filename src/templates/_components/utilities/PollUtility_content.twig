@@ -41,7 +41,7 @@
 
 <hr/>
 {% if allow_admin_changes %}
-<form method="post" action="{{ url('/actions/poll/install/setup') }}">
+<form method="post" action="{{ url('actions/poll/install/setup') }}">
     {{ csrfInput() }}
     <button type="submit"  class="btn submit">Setup content sections and fields</button>
     {{ redirectInput(url('utilities/poll-poll-utility')) }}
