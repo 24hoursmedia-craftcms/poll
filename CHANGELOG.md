@@ -1,5 +1,9 @@
 # Poll Changelog
 
+## 1.2.5 - 2020-02-20
+### Fixed
+- Fixed problem viewing poll results in Admin CP
+
 ## 1.2.4 - 2020-02-09
 ### Fixed
 - fixed installation button for content in craft 3.4

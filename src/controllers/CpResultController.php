@@ -24,7 +24,7 @@ class CpResultController extends Controller
         if (!$id) {
             throw new BadRequestHttpException('Invalid id');
         }
-        $service = Poll::$plugin->pollService;
+        $service = Poll::$plugin->facade;
         $poll = $service->getPoll($id);
 
         $simpleResults = $service->getResults($poll);
