@@ -46,9 +46,11 @@ class ResultService extends Component
     public function getData(array $pollsOrIds)
     {
         $ids = $this->getValidPollIds($pollsOrIds);
+
         if ([] === $ids) {
             return [];
         }
+
         $stmt = (new Query())
             ->select('
             a.dateCreated AS date,
@@ -60,7 +62,7 @@ class ResultService extends Component
             '
             )
             ->from(PollAnswer::tableName() . ' a')
-            ->leftJoin(User::tableName() . ' u', 'a.userId=u.id')
+            ->leftJoin('{{%users}} u', 'a.userId=u.id')
             ->where(
                 new InCondition('a.pollId', 'IN', $ids)
             )
