@@ -41,8 +41,8 @@
     size: 10,
     value: settings['numCookieParticipations'],
 }) }}
-{% if settings.getError('numCookieParticipations') %}
-    {{ forms.errorList([settings.getError('numCookieParticipations')]) }}
+{% if settings.getFirstError('numCookieParticipations') %}
+    {{ forms.errorList([settings.getFirstError('numCookieParticipations')]) }}
 {% endif %}
 
 {{ forms.textField({
@@ -53,8 +53,8 @@
     size: 10,
     value: settings['participationsCookieLifetime'],
 }) }}
-{% if settings.getError('participationsCookieLifetime') %}
-    {{ forms.errorList([settings.getError('participationsCookieLifetime')]) }}
+{% if settings.getFirstError('participationsCookieLifetime') %}
+    {{ forms.errorList([settings.getFirstError('participationsCookieLifetime')]) }}
 {% endif %}
 
 <hr/>
