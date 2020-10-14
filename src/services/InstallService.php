@@ -8,17 +8,19 @@
 namespace twentyfourhoursmedia\poll\services;
 
 use Craft;
+use craft\base\Component;
 use craft\controllers\SectionsController;
+use craft\elements\MatrixBlock;
 use craft\fields\Entries;
 use craft\fields\Matrix;
 use craft\fields\PlainText;
+use craft\models\FieldLayout;
 use craft\models\FieldLayoutTab;
 use craft\models\MatrixBlockType;
 use craft\models\Section;
 use craft\models\Section_SiteSettings;
 use twentyfourhoursmedia\poll\models\SetupReport;
 use twentyfourhoursmedia\poll\Poll;
-use craft\base\Component;
 use twentyfourhoursmedia\poll\services\traits\InstallServiceHelperTrait;
 
 
@@ -35,7 +37,8 @@ class InstallService extends Component
      * @return bool|\craft\base\FieldInterface|null
      * @throws \Throwable
      */
-    private function ensureSelectPollField($validateOnly, SetupReport $report) {
+    private function ensureSelectPollField($validateOnly, SetupReport $report)
+    {
 
         $config = Poll::$plugin->pollService->getConfig();
         $fieldHandle = $config[PollService::CFG_FIELD_SELECT_POLL_HANDLE];
@@ -50,7 +53,7 @@ class InstallService extends Component
             }
         }
 
-        return $this->enforceFieldTypeWithHandle($fieldHandle, function() use ($config, $fieldHandle) {
+        return $this->enforceFieldTypeWithHandle($fieldHandle, function () use ($config, $fieldHandle) {
             $fieldGroup = $this->enforceFieldGroupWithName($config[PollService::CFG_FIELD_GROUP_NAME]);
             $sectionHandle = $config[PollService::CFG_POLL_SECTION_HANDLE];
             $section = Craft::$app->sections->getSectionByHandle($sectionHandle);
@@ -241,29 +244,51 @@ class InstallService extends Component
             }
         }
 
+
+        $heap = [
+            'block_type' => null,
+            'field_layout' => null,
+            'answer_field' => null
+        ];
+
         return $this->enforceFieldTypeWithHandle(
             $fieldHandle,
-            function() use ($config, $fieldHandle) {
+            function () use ($config, $fieldHandle, &$heap) {
+                $fieldLayout = new FieldLayout([]);
+                $fieldLayout->type = MatrixBlock::class;
+
+                $tab = new FieldLayoutTab();
+                $tab->name = 'Content';
+                $tab->sortOrder = 1;
+                $fieldLayout->setTabs([$tab]);
+
+                $heap['field_layout'] = $fieldLayout;
+
                 $matrix = new Matrix();
                 $matrix->handle = $fieldHandle;
                 $matrix->name = 'Poll answers';
                 $matrix->groupId = $this->enforceFieldGroupWithName($config[PollService::CFG_FIELD_GROUP_NAME])->id;
                 $matrix->propagationMethod = Matrix::PROPAGATION_METHOD_ALL;
+
                 $blockType = new MatrixBlockType();
                 $blockType->handle = $config[PollService::CFG_MATRIXBLOCK_ANSWER_HANDLE];
                 $blockType->name = 'Answer';
+                $blockType->setFieldLayout($fieldLayout);
 
                 $field = new PlainText();
                 $field->name = 'Label';
                 $field->handle = 'label';
-                $blockType->setFields([
-                    $field
-                ]);
+
+                $blockType->setFields([$field]);
+                $tab->setFields([$field]);
+                $fieldLayout->setFields([$field]);
 
                 $matrix->setBlockTypes([$blockType]);
+                $heap['block_type'] = $blockType;
+                $heap['answer_field'] = $field;
                 return $matrix;
-            }
-        );
+            }, function ($matrix) use (&$heap) {
+        });
     }
 
     /**
@@ -273,7 +298,8 @@ class InstallService extends Component
      * @throws \Throwable
      * @throws \craft\errors\SectionNotFoundException
      */
-    private function apply(bool $validateOnly, SetupReport $setupReport) {
+    private function apply(bool $validateOnly, SetupReport $setupReport)
+    {
         $success = true;
         $success = ($success || $validateOnly) && $this->ensureMatrix($validateOnly, $setupReport);
         $success = ($success || $validateOnly) && $this->ensureSection($validateOnly, $setupReport);
