@@ -1,5 +1,9 @@
 # Poll Changelog
 
+## 1.5.0 - 2020-10-14
+### Fixed
+- Carft 3.5 compatibility fixes
+
 ## 1.2.5 - 2020-02-20
 ### Fixed
 - Fixed problem viewing poll results in Admin CP
