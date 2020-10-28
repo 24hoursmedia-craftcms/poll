@@ -43,7 +43,7 @@ class PollAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@twentyfourhoursmedia/poll/assetbundles/poll/dist";
+        $this->sourcePath = "@twentyfourhoursmedia/poll/assetbundles/Poll/dist";
 
         // define the dependencies
         $this->depends = [

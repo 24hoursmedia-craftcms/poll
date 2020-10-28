@@ -1,5 +1,9 @@
 # Poll Changelog
 
+# 1.6.1 - 2020-10-28
+### Fixed
+- Fix problems on case sensitive file systems (i.e. linux vs osx/win)
+
 ## 1.6.0 - 2020-10-27
 ### Fixed
 - composer v2 compatibility
