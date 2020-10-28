@@ -1,18 +1,22 @@
 # Poll Changelog
 
-# 1.6.1 - 2020-10-28
+## 1.6.1 - 2020-10-28
+
 ### Fixed
 - Fix problems on case sensitive file systems (i.e. linux vs osx/win)
 
 ## 1.6.0 - 2020-10-27
+
 ### Fixed
 - composer v2 compatibility
 
 ## 1.5.0 - 2020-10-14
+
 ### Fixed
 - Carft 3.5 compatibility fixes
 
 ## 1.2.5 - 2020-02-20
+
 ### Fixed
 - Fixed problem viewing poll results in Admin CP
 
