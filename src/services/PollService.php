@@ -28,6 +28,7 @@ use twentyfourhoursmedia\poll\Poll;
 use Craft;
 use craft\base\Component;
 use twentyfourhoursmedia\poll\records\PollAnswer;
+use yii\base\InvalidConfigException;
 use yii\web\Cookie;
 
 /**
@@ -294,13 +295,23 @@ class PollService extends Component
      */
     public function isAPollEntry($element)
     {
-        if (!$element instanceof Entry) {
+        try {
+            if (!$element instanceof Entry) {
+                return false;
+            }
+            if ($element->section->handle !== $this->getConfigOption(self::CFG_POLL_SECTION_HANDLE)) {
+                return false;
+            }
+            return true;
+        } catch (InvalidConfigException $e) {
+            // Sometimes for some reason craft passes entries with an invalid section during gc cleanup
+            // as reported in: https://github.com/craftcms/cms/issues/7356
+            // and https://github.com/24hoursmedia-craftcms/poll/issues/28
+            // craft v3.5.17
+            // the exception is caught here and the entry is considered 'no poll'.
+            // this may result in orphaned answers
             return false;
         }
-        if ($element->section->handle !== $this->getConfigOption(self::CFG_POLL_SECTION_HANDLE)) {
-            return false;
-        }
-        return true;
     }
 
     /**

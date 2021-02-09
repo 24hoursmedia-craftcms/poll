@@ -1,5 +1,10 @@
 # Poll Changelog
 
+## 1.6.3 - 2021-02-09
+
+### Fixed
+- A potential block in gc/run (garbage cleanup) due to a Craft error is now ignored.
+
 ## 1.6.1 - 2020-10-28
 
 ### Fixed
