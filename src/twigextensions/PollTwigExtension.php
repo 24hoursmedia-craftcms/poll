@@ -16,6 +16,8 @@ use craft\elements\MatrixBlock;
 use craft\models\MatrixBlockType;
 use twentyfourhoursmedia\poll\models\PollResults;
 use twentyfourhoursmedia\poll\Poll;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 use Craft;
 use twentyfourhoursmedia\poll\services\PollService;
@@ -56,9 +58,9 @@ class PollTwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('poll_participated', [$this, 'participatedInPoll']),
-            new \Twig_SimpleFilter('poll_results', [$this, 'getPollResults']),
-            new \Twig_SimpleFilter('poll_uniqid', [$this, 'createUid']),
+            new TwigFilter('poll_participated', [$this, 'participatedInPoll']),
+            new TwigFilter('poll_results', [$this, 'getPollResults']),
+            new TwigFilter('poll_uniqid', [$this, 'createUid']),
         ];
     }
 
@@ -72,14 +74,15 @@ class PollTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('generatePollAnswerFieldName', [$this, 'generatePollAnswerFieldName']),
-            new \Twig_SimpleFunction('generatePollAnswerFieldValue', [$this, 'generatePollAnswerFieldValue']),
-            new \Twig_SimpleFunction('pollInputs', [$this, 'getPollInputs'], ['is_safe' => ['html']]),
+            new TwigFunction('generatePollAnswerFieldName', [$this, 'generatePollAnswerFieldName']),
+            new TwigFunction('generatePollAnswerTextFieldName', [$this, 'generatePollAnswerTextFieldName']),
+            new TwigFunction('generatePollAnswerFieldValue', [$this, 'generatePollAnswerFieldValue']),
+            new TwigFunction('pollInputs', [$this, 'getPollInputs'], ['is_safe' => ['html']]),
             // deprecated:
-            new \Twig_SimpleFunction('getPollResults', [$this, 'getPollResults']),
-            new \Twig_SimpleFunction('pollUid', [$this, 'createUniqid']),
+            new TwigFunction('getPollResults', [$this, 'getPollResults']),
+            new TwigFunction('pollUid', [$this, 'createUniqid']),
             // deprecated:
-            new \Twig_SimpleFunction('getPoll', [$this, 'getPoll']),
+            new TwigFunction('getPoll', [$this, 'getPoll']),
         ];
     }
 
@@ -128,6 +131,11 @@ HTML;
     {
         $service = Poll::$plugin->pollService;
         return "{$service->getConfigOption('CFG_FORM_POLLANSWER_FIELDNAME')}[{$poll->uid}]";
+    }
+
+    public function generatePollAnswerTextFieldName(Entry $poll, MatrixBlock $answer) : string {
+        $service = Poll::$plugin->pollService;
+        return "{$service->getConfigOption('CFG_FORM_POLLANSWERTEXT_FIELDNAME')}[{$poll->uid}][$answer->uid]";
     }
 
     /**

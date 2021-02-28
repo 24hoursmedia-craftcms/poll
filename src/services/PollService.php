@@ -10,23 +10,16 @@
 
 namespace twentyfourhoursmedia\poll\services;
 
-use craft\db\Query;
+use Craft;
+use yii\base\Component;
 use craft\elements\db\MatrixBlockQuery;
 use craft\elements\Entry;
 use craft\elements\MatrixBlock;
-use craft\elements\User;
 use craft\fields\Matrix;
-use craft\helpers\Db;
 use craft\models\Section;
-use craft\services\Users;
 use twentyfourhoursmedia\poll\events\PollEvents;
 use twentyfourhoursmedia\poll\events\PollSubmittedEvent;
-use twentyfourhoursmedia\poll\models\PollResults;
-use twentyfourhoursmedia\poll\models\ResultByAnswer;
 use twentyfourhoursmedia\poll\Poll;
-
-use Craft;
-use craft\base\Component;
 use twentyfourhoursmedia\poll\records\PollAnswer;
 use yii\base\InvalidConfigException;
 use yii\web\Cookie;
@@ -57,6 +50,7 @@ class PollService extends Component
     public const CFG_FORM_POLLID_FIELDNAME = "CFG_FORM_POLLID_FIELDNAME";
     public const CFG_FORM_POLLUID_FIELDNAME = "CFG_FORM_POLLUID_FIELDNAME";
     public const CFG_FORM_POLLANSWER_FIELDNAME = "CFG_FORM_POLLANSWER_FIELDNAME";
+    public const CFG_FORM_POLLANSWERTEXT_FIELDNAME = "CFG_FORM_POLLANSWERTEXT_FIELDNAME";
     public const CFG_FORM_SITEID_FIELDNAME = "CFG_FORM_SITEID_FIELDNAME";
     public const CFG_FORM_SITEUID_FIELDNAME = "CFG_FORM_SITEUID_FIELDNAME";
     public const CFG_FORM_ANSWERFIELDID_FIELDNAME = "CFG_FORM_ANSWERSFIELDID_FIELDNAME";
@@ -80,6 +74,7 @@ class PollService extends Component
         self::CFG_FORM_ANSWERFIELDID_FIELDNAME => '__answerfield_id',
         self::CFG_FORM_ANSWERFIELDUID_FIELDNAME => '__answerfield_uid',
         self::CFG_FORM_POLLANSWER_FIELDNAME => '__answer',
+        self::CFG_FORM_POLLANSWERTEXT_FIELDNAME => '__text'
     ];
 
 
@@ -167,15 +162,18 @@ class PollService extends Component
     }
 
     /**
-     * @param Entry $poll           the entry in the polls section
-     * @param int $siteId           the site from which the form was submitted
-     * @param int $answerFieldId    the fieldid (matrixblock) that contained the answers
-     * @param array $answerUids     uid's of the blocks in the field
+     * @param Entry $poll the entry in the polls section
+     * @param int $siteId the site from which the form was submitted
+     * @param int $answerFieldId the fieldid (matrixblock) that contained the answers
+     * @param array $answerUids uid's of the blocks in the field
+     * @param array|null $answerTexts = ['answer_uid' => 'some comment', 'answer_uid2' => 'some other comment]
      * @return bool
+     * @throws \craft\errors\InvalidFieldException
      */
-    public function submit(Entry $poll, int $siteId, int $answerFieldId, array $answerUids): bool
+    public function submit(Entry $poll, int $siteId, int $answerFieldId, array $answerUids, ?array $answerTexts = []): bool
     {
         $answerMatrix = $poll->getFieldValue($this->getConfigOption(self::CFG_FIELD_ANSWER_MATRIX_HANDLE));
+        $answerTexts = is_array($answerTexts) ? $answerTexts : [];
         /* @var MatrixBlockQuery $answerMatrix */
         $answers = $answerMatrix->all();
         $answers = array_filter($answers, function ($a) use ($answerUids) {
@@ -188,12 +186,14 @@ class PollService extends Component
         $this->addPollIdToCookie($poll->id);
         $user = Craft::$app->user;
         foreach ($answers as $answer) {
+            $answerText = $answerTexts[$answer->uid] ?? null;
             $record = new PollAnswer([
                 'pollId' => $poll->id,
                 'siteId' => $siteId,
                 'fieldId' => $answerFieldId,
                 'answerId' => $answer->id,
                 'userId' => $user ? $user->id : null,
+                'answerText' => $answerText,
                 'ip' => inet_pton(Craft::$app->request->getUserIP())
             ]);
             $record->save();

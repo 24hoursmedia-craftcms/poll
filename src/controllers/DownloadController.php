@@ -57,6 +57,12 @@ class DownloadController extends Controller
         }
 
         $columns = CsvHelper::getColumns($data);
+        // order columns, place answer_text at end
+        $idx = array_search('answer_text', $columns, true);
+        if (false !== $idx) {
+            unset($columns[$idx]);
+            $columns[] = 'answer_text';
+        }
 
         CsvHelper::createCsv($fh, $columns, $data);
         fseek($fh, 0);

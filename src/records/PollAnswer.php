@@ -69,7 +69,7 @@ class PollAnswer extends ActiveRecord
                 break;
             }
 
-            $result[$name] = isset($columns[$name]) ? $columns[$name] : $tableSchema->columns[$name]->defaultValue;
+            $result[$name] = $columns[$name] ?? $tableSchema->columns[$name]->defaultValue;
         }
 
         return $result;

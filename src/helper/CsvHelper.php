@@ -32,7 +32,7 @@ class CsvHelper
             foreach ($columns as $key) {
                 $csvRow[] = $row[$key] ?? null;
             }
-            fputcsv($fh, $row, ';');
+            fputcsv($fh, $csvRow, ';');
         }
     }
 
