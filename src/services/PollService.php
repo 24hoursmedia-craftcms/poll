@@ -186,7 +186,7 @@ class PollService extends Component
         $this->addPollIdToCookie($poll->id);
         $user = Craft::$app->user;
         foreach ($answers as $answer) {
-            $answerText = $answerTexts[$answer->uid];
+            $answerText = $answerTexts[$answer->uid] ?? null;
             $record = new PollAnswer([
                 'pollId' => $poll->id,
                 'siteId' => $siteId,
