@@ -112,7 +112,8 @@ class Install extends Migration
                     'fieldId' => $this->integer()->notNull(),
                     'answerId' => $this->integer()->notNull(),
                     'userId' => $this->integer()->Null(),
-                    'ip' => $this->binary(16)->null()
+                    'ip' => $this->binary(16)->null(),
+                    'answerText' => $this->mediumText()->null()
                 ]
             );
         }

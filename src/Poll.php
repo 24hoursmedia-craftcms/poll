@@ -14,6 +14,7 @@ use Craft;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use twentyfourhoursmedia\poll\services\Facade;
+use twentyfourhoursmedia\poll\services\PollService;
 use twentyfourhoursmedia\poll\services\ResultService;
 use yii\base\Event;
 use craft\elements\Entry;
@@ -26,7 +27,6 @@ use craft\services\Utilities;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-use twentyfourhoursmedia\poll\services\PollService as PollServiceService;
 use twentyfourhoursmedia\poll\services\InstallService;
 use twentyfourhoursmedia\poll\variables\PollVariable;
 use twentyfourhoursmedia\poll\twigextensions\PollTwigExtension;
@@ -79,7 +79,7 @@ class Poll extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.1';
+    public $schemaVersion = '1.1.1';
 
     // Public Methods
     // =========================================================================

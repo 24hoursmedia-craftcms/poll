@@ -57,6 +57,7 @@ class ResultService extends Component
             a.pollId AS poll_id, 
             a.answerId as answer_id,
             a.userId as user_id,
+            a.answerText as answer_text,
             u.email as user_email,
             u.userName as username
             '

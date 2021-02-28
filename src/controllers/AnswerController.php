@@ -82,6 +82,8 @@ class AnswerController extends Controller
             throw new BadRequestHttpException('Invalid answer field');
         }
 
+
+
         // get and validate the poll (only enabled polls can be submitted)
         $poll = $service->getPoll($pollId, 'enabled');
         if (!$poll || $poll->uid !== $pollUid) {
@@ -95,7 +97,12 @@ class AnswerController extends Controller
             $selectedAnswerUids =  array_filter(
                 [$request->post($service->getConfigOption(PollService::CFG_FORM_POLLANSWER_FIELDNAME))[$poll->uid] ?? null]
             );
-            $success = $service->submit($poll, (int)$siteId, (int)$answerFieldId, $selectedAnswerUids);
+
+            // try to get the answer text for the submitted field
+            $submittedAnswerTexts = $request->post($service->getConfigOption(PollService::CFG_FORM_POLLANSWERTEXT_FIELDNAME), []);
+            $answerTexts = $submittedAnswerTexts[$pollUid] ?? [];
+
+            $success = $service->submit($poll, (int)$siteId, (int)$answerFieldId, $selectedAnswerUids, $answerTexts);
         } else {
             $success = false;
             $message = $this->alreadyParticipatedMsg;
