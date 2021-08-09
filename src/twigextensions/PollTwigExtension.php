@@ -109,9 +109,6 @@ class PollTwigExtension extends \Twig_Extension
             return 'ERROR invalid answers field';
         }
 
-
-
-        $site = Craft::$app->sites->getCurrentSite();
         return <<<HTML
         <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_SITEID_FIELDNAME)}" value="{$poll->site->id}" />
         <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_SITEUID_FIELDNAME)}" value="{$poll->site->uid}" />
