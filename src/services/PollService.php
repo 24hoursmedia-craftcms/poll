@@ -214,7 +214,7 @@ class PollService extends Component
      * @param null $status the status, defaults to all polls, also disabled.
      * @return Entry | null
      */
-    public function getPoll($pollOrPollId, $status = null)
+    public function getPoll($pollOrPollId, $status = null, $siteId = null)
     {
         if (!$pollOrPollId) {
             return null;
@@ -222,9 +222,16 @@ class PollService extends Component
         if ($pollOrPollId instanceof Entry) {
             return $this->isAPollEntry($pollOrPollId) ? $pollOrPollId : null;
         }
-        return Entry::find()
+        $siteCookieName = 'Craft-' . Craft::$app->getSystemUid() . ':siteId';
+        if(!$siteId) {
+            $siteId = \Craft::$app->request->getRawCookies()->getValue($siteCookieName) ?: 1;
+        }
+        $q = Entry::find()
+            ->siteId($siteId)
             ->section($this->getConfigOption(PollService::CFG_POLL_SECTION_HANDLE))
-            ->id($pollOrPollId)->status($status)->one();
+            ->id($pollOrPollId);
+
+        return $q->one();
     }
 
     /**
