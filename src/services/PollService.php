@@ -222,8 +222,10 @@ class PollService extends Component
         if ($pollOrPollId instanceof Entry) {
             return $this->isAPollEntry($pollOrPollId) ? $pollOrPollId : null;
         }
-        $siteCookieName = 'Craft-' . Craft::$app->getSystemUid() . ':siteId';
+
+        // if we weren't passed a site ID, try to get the current site's ID from a cookie (the request is probably from the CP)
         if(!$siteId) {
+            $siteCookieName = 'Craft-' . Craft::$app->getSystemUid() . ':siteId';
             $siteId = \Craft::$app->request->getRawCookies()->getValue($siteCookieName) ?: 1;
         }
         $q = Entry::find()
