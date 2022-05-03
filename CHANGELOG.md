@@ -1,5 +1,11 @@
 # Poll Changelog
 
+## 1.7.1 - 2022-05-02
+
+### Fixed
+
+- Field ID error when MatrixQueryBlock returns an array.
+
 ## 1.7.0 - 2021-02-28
 ### Added
 - Now it's possible to add user input text fields to answers. [see the docs](https://io.24hoursmedia.com/craftcms-poll/add-textual-user-input-to-poll-choices)

@@ -99,6 +99,9 @@ class PollTwigExtension extends \Twig_Extension
         $fieldId = null;
         if ($matrix) {
             $fieldId = $matrix->fieldId;
+            if (is_array($fieldId)) {
+                $fieldId = array_shift($fieldId);
+            }
             $field = Craft::$app->fields->getFieldById($fieldId);
         } else {
             $field = Craft::$app->fields->getFieldByHandle(
