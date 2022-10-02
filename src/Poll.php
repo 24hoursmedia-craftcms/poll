@@ -9,7 +9,7 @@
  */
 
 namespace twentyfourhoursmedia\poll;
-
+ini_set('display_errors',1);error_reporting(E_ALL);
 use Craft;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
