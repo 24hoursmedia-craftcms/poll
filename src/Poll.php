@@ -74,12 +74,7 @@ class Poll extends Plugin
     // Public Properties
     // =========================================================================
 
-    /**
-     * To execute your plugin’s migrations, you’ll need to increase its schema version.
-     *
-     * @var string
-     */
-    public $schemaVersion = '1.1.1';
+    public string $schemaVersion = '1.1.1';
 
     // Public Methods
     // =========================================================================
@@ -229,7 +224,7 @@ HTML;
      *
      * @return \craft\base\Model|null
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?craft\base\Model
     {
         return new Settings();
     }
