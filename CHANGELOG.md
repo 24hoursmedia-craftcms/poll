@@ -1,6 +1,6 @@
 # Poll Changelog
 
-## 2.0.0
+## 2.0.1
 ### Changed
 - Craft 4 compatibility release
 
