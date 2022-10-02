@@ -1,5 +1,9 @@
 # Poll Changelog
 
+## 2.0.0
+### Changed
+- Craft 4 compatibility release
+
 ## 1.7.0 - 2021-02-28
 ### Added
 - Now it's possible to add user input text fields to answers. [see the docs](https://io.24hoursmedia.com/craftcms-poll/add-textual-user-input-to-poll-choices)

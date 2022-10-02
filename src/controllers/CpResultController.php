@@ -15,7 +15,7 @@ use yii\web\BadRequestHttpException;
 class CpResultController extends Controller
 {
 
-    protected $allowAnonymous = false;
+    protected array | bool | int $allowAnonymous = false;
 
     public function actionResult()
     {

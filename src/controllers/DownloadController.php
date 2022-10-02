@@ -17,7 +17,7 @@ use yii\web\Response;
 class DownloadController extends Controller
 {
 
-    protected $allowAnonymous = false;
+    protected array | bool | int $allowAnonymous = false;
 
     /**
      * Gets a poll entry from the request
