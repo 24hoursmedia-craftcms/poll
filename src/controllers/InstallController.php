@@ -16,7 +16,7 @@ use yii\web\BadRequestHttpException;
 class InstallController extends Controller
 {
 
-    protected $allowAnonymous = false;
+    protected array | bool | int $allowAnonymous = false;
 
     /**
      * Handle a request going to our plugin's index action URL,

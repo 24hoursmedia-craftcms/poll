@@ -11,12 +11,12 @@ use Craft;
 use craft\base\Component;
 use craft\controllers\SectionsController;
 use craft\elements\MatrixBlock;
+use craft\fieldlayoutelements\CustomField;
 use craft\fields\Entries;
 use craft\fields\Matrix;
 use craft\fields\PlainText;
 use craft\models\FieldLayout;
 use craft\models\FieldLayoutTab;
-use craft\models\MatrixBlockType;
 use craft\models\Section;
 use craft\models\Section_SiteSettings;
 use twentyfourhoursmedia\poll\models\SetupReport;
@@ -63,7 +63,7 @@ class InstallService extends Component
             $field->handle = $fieldHandle;
             $field->name = 'Select poll';
             $field->allowLimit = true;
-            $field->limit = 1;
+            $field->maxRelations = 1;
             $field->allowMultipleSources = false;
             $field->sources = ['section:' . $section->uid];
             return $field;
@@ -88,14 +88,11 @@ class InstallService extends Component
         $sectionHandle = $config[PollService::CFG_POLL_SECTION_HANDLE];
         $fieldHandle = $config[PollService::CFG_FIELD_ANSWER_MATRIX_HANDLE];
         $types = $section->entryTypes;
-        $type = null;
-        foreach ($types as $entryType) {
-            if ($entryType->handle === $sectionHandle) {
-                $type = $entryType;
-            }
-        }
+        $type = $types[0] ?? null;
+
+
         if (!$type) {
-            $report->warn('No entry type with handle ' . $sectionHandle . ' found.');
+            $report->warn('No entry type for section ' . $sectionHandle . ' found.');
             if ($validateOnly) {
                 return false;
             }
@@ -104,7 +101,7 @@ class InstallService extends Component
         $matrixField = $type->getFieldLayout()->getFieldByHandle($fieldHandle);
         if (!$matrixField) {
             if ($validateOnly) {
-                $report->warn("Section {$sectionHandle} does not contain entry type with handle {$fieldHandle}");
+                $report->warn("Entry type in section {$sectionHandle} does not contain matrix field with handle {$fieldHandle}");
                 return false;
             } else {
 
@@ -117,10 +114,16 @@ class InstallService extends Component
                     $type->getFieldLayout()->setTabs([$tab]);
                 }
 
-                $fields = $tab->getFields();
-                $fields[] = $matrix;
-                $tab->setFields($fields);
-                $success = Craft::$app->sections->saveEntryType($type, false);
+                $newElement = [
+                    'type' => CustomField::class,
+                    'fieldUid' => $matrix->uid,
+                    'required' => false,
+                ];
+                $tab->setElements(array_merge($tab->getElements(), ['new1' => $newElement]));
+
+                $tabs[0] = $tab;
+                $type->getFieldLayout()->setTabs($tabs);
+                $success = Craft::$app->fields->saveLayout($type->getFieldLayout());
                 if ($success) {
                     $report->ok("Created in Section {$sectionHandle}: entry type with handle {$fieldHandle}");
                 } else {
@@ -246,9 +249,7 @@ class InstallService extends Component
 
 
         $heap = [
-            'block_type' => null,
             'field_layout' => null,
-            'answer_field' => null
         ];
 
         return $this->enforceFieldTypeWithHandle(
@@ -269,23 +270,19 @@ class InstallService extends Component
                 $matrix->name = 'Poll answers';
                 $matrix->groupId = $this->enforceFieldGroupWithName($config[PollService::CFG_FIELD_GROUP_NAME])->id;
                 $matrix->propagationMethod = Matrix::PROPAGATION_METHOD_ALL;
-
-                $blockType = new MatrixBlockType();
-                $blockType->handle = $config[PollService::CFG_MATRIXBLOCK_ANSWER_HANDLE];
-                $blockType->name = 'Answer';
-                $blockType->setFieldLayout($fieldLayout);
-
-                $field = new PlainText();
-                $field->name = 'Label';
-                $field->handle = 'label';
-
-                $blockType->setFields([$field]);
-                $tab->setFields([$field]);
-                $fieldLayout->setFields([$field]);
-
-                $matrix->setBlockTypes([$blockType]);
-                $heap['block_type'] = $blockType;
-                $heap['answer_field'] = $field;
+                $matrix->setBlockTypes([
+                    'new1' => [
+                        'name' => 'Answer',
+                        'handle' => $config[PollService::CFG_MATRIXBLOCK_ANSWER_HANDLE],
+                        'fields' => [
+                            'new1' => [
+                                'type' => PlainText::class,
+                                'name' => 'Label',
+                                'handle' => 'label',
+                            ]
+                        ]
+                    ]
+                ]);
                 return $matrix;
             }, function ($matrix) use (&$heap) {
         });

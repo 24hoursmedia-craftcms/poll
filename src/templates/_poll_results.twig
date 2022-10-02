@@ -5,7 +5,7 @@
 
 {% set element = poll %}
 {% set docTitle = 'Poll results' %}
-{% extends '_layouts/cp.html' %}
+{% extends '_layouts/cp.twig' %}
 
 {% block main %}
     <small><a href="{{ url('poll') }}">&laquo; {{ 'Back' | t('poll') }}</a></small>
@@ -36,7 +36,7 @@
     <p>{{ 'You can download raw data here for further marketing analysis or targeting.' | t }}</p>
     <div>
         <form method="post" action="{{ actionUrl('poll/download/poll-data?id=' ~ poll.id) }}">
-            {{ getCsrfInput() }}
+            {{ csrfInput() }}
             <button type="submit" class="btn submit">Download data in CSV format</button>
         </form>
     </div>

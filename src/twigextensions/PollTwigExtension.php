@@ -99,7 +99,7 @@ class PollTwigExtension extends AbstractExtension
 
         $fieldId = null;
         if ($matrix) {
-            $fieldId = $matrix->fieldId;
+            $fieldId = $matrix->one()->fieldId;
             $field = Craft::$app->fields->getFieldById($fieldId);
         } else {
             $field = Craft::$app->fields->getFieldByHandle(

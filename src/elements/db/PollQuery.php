@@ -7,6 +7,7 @@
 
 namespace twentyfourhoursmedia\poll\elements\db;
 
+use craft\db\Query;
 use craft\elements\db\EntryQuery;
 use craft\models\Section;
 use twentyfourhoursmedia\poll\Poll;
@@ -15,18 +16,18 @@ use twentyfourhoursmedia\poll\services\PollService;
 class PollQuery extends EntryQuery
 {
 
-    public $sectionId;
+    public mixed $sectionId = null;
 
     /**
      * A cached section for polls
      * @var Section | null
      */
-    private $pollSections;
+    private mixed $pollSections = null;
 
     /**
      * @var PollService
      */
-    private $pollService;
+    private mixed $pollService;
 
     public function __construct($elementType, array $config = [])
     {
@@ -60,15 +61,14 @@ class PollQuery extends EntryQuery
 
     /**
      * @param Section|string|string[]|null $value
-     * @return EntryQuery|void
      */
-    public function section($value) {
+    public function section(mixed $value): EntryQuery {
         // reset section ids to limit only to poll sections
         $this->resetSectionIds();
         return $this;
     }
 
-    public function prepare($builder)
+    public function prepare($builder): Query
     {
         // reset section ids
         $this->resetSectionIds();

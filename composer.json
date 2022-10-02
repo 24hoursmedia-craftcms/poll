@@ -2,7 +2,7 @@
     "name": "twentyfourhoursmedia/poll",
     "description": "poll plugin for craft 4.0.0.1 or higher compatible versions of Craft CMS",
     "type": "craft-plugin",
-    "version": "2.0.0-dev",
+    "version": "2.0.0",
     "keywords": [
         "craft",
         "cms",
