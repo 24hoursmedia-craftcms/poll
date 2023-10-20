@@ -16,6 +16,7 @@ use craft\elements\MatrixBlock;
 use craft\models\MatrixBlockType;
 use twentyfourhoursmedia\poll\models\PollResults;
 use twentyfourhoursmedia\poll\Poll;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -33,7 +34,7 @@ use twentyfourhoursmedia\poll\services\PollService;
  * @package   Poll
  * @since     1.0.0
  */
-class PollTwigExtension extends \Twig_Extension
+class PollTwigExtension extends AbstractExtension
 {
     // Public Methods
     // =========================================================================
@@ -98,7 +99,7 @@ class PollTwigExtension extends \Twig_Extension
 
         $fieldId = null;
         if ($matrix) {
-            $fieldId = $matrix->fieldId;
+            $fieldId = $matrix->one()->fieldId;
             $field = Craft::$app->fields->getFieldById($fieldId);
         } else {
             $field = Craft::$app->fields->getFieldByHandle(

@@ -42,7 +42,7 @@ use yii\web\BadRequestHttpException;
 class AnswerController extends Controller
 {
 
-    protected $allowAnonymous = ['submit'];
+    protected array | bool | int $allowAnonymous = ['submit'];
 
     /**
      * Message returned in json if user has already participated
