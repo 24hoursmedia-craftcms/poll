@@ -11,12 +11,13 @@ use Craft;
 use craft\elements\actions\Edit;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\db\EntryQuery;
+use craft\elements\Entry;
 use craft\helpers\UrlHelper;
 use twentyfourhoursmedia\commentswork\elements\db\CommentQuery;
 use twentyfourhoursmedia\poll\elements\actions\CreateReport;
 use twentyfourhoursmedia\poll\elements\db\PollQuery;
 
-class Poll extends \craft\elements\Entry
+class Poll extends Entry
 {
 
     protected static function defineActions(string $source = null): array
@@ -40,7 +41,7 @@ class Poll extends \craft\elements\Entry
         return Craft::t('poll', 'Poll');
     }
 
-    public function getCpEditUrl()
+    public function getCpEditUrl(): ?string
     {
         return UrlHelper::actionUrl('poll/cp-result/result?id='. $this->id);
     }
@@ -54,7 +55,7 @@ class Poll extends \craft\elements\Entry
      * Creates an [[ElementQueryInterface]] instance for query purpose.
      * @return CommentQuery.
      */
-    public static function find(): ElementQueryInterface
+    public static function find(): EntryQuery
     {
         return new PollQuery(static::class);
     }
