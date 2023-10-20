@@ -231,7 +231,7 @@ class PollService extends Component
         $q = Entry::find()
             ->siteId($siteId)
             ->section($this->getConfigOption(PollService::CFG_POLL_SECTION_HANDLE))
-            ->id($pollOrPollId);
+            ->id($pollOrPollId)->status($status);
 
         return $q->one();
     }
