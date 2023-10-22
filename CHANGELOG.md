@@ -1,12 +1,14 @@
 # Poll Changelog
 
+## 2.1.0
+
+### Fixed
+- Improve multi-site suport (thanks to MR #34 from @adrienne)
+- Fixes issue with multisite poll results in the CP (thanks to MR #34 from @adrienne)
+
 ## 2.0.1
 ### Changed
 - Craft 4 compatibility release
-
-## 1.7.0 - 2021-02-28
-### Fixed
-- Made things more multi-site aware and fixed a bad issue with multisite poll results in the CP
 
 ## 1.7.0 - 2021-02-28
 ### Added
