@@ -100,6 +100,9 @@ class PollTwigExtension extends AbstractExtension
         $fieldId = null;
         if ($matrix) {
             $fieldId = $matrix->one()->fieldId;
+            if (is_array($fieldId)) {
+                $fieldId = array_shift($fieldId);
+            }
             $field = Craft::$app->fields->getFieldById($fieldId);
         } else {
             $field = Craft::$app->fields->getFieldByHandle(

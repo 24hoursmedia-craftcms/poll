@@ -4,7 +4,8 @@
 
 ### Fixed
 - Improve multi-site suport (thanks to MR #34 from @adrienne)
-- Fixes issue with multisite poll results in the CP (thanks to MR #34 from @adrienne)
+- Fixes issue with multisite poll results in the CP (thanks to MR#34 from @adrienne)
+- Fix potential issue when multiple field ids are returned by a matrix (MR#40, @kringkaste)
 
 ## 2.0.1
 ### Changed
