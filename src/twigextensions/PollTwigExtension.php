@@ -100,6 +100,9 @@ class PollTwigExtension extends AbstractExtension
         $fieldId = null;
         if ($matrix) {
             $fieldId = $matrix->one()->fieldId;
+            if (is_array($fieldId)) {
+                $fieldId = array_shift($fieldId);
+            }
             $field = Craft::$app->fields->getFieldById($fieldId);
         } else {
             $field = Craft::$app->fields->getFieldByHandle(
@@ -110,12 +113,9 @@ class PollTwigExtension extends AbstractExtension
             return 'ERROR invalid answers field';
         }
 
-
-
-        $site = Craft::$app->sites->getCurrentSite();
         return <<<HTML
-        <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_SITEID_FIELDNAME)}" value="{$site->id}" />
-        <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_SITEUID_FIELDNAME)}" value="{$site->uid}" />
+        <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_SITEID_FIELDNAME)}" value="{$poll->site->id}" />
+        <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_SITEUID_FIELDNAME)}" value="{$poll->site->uid}" />
         <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_POLLID_FIELDNAME)}" value="{$poll->id}" />
         <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_POLLUID_FIELDNAME)}" value="{$poll->uid}" />
         <input type="hidden" name="{$service->getConfigOption(PollService::CFG_FORM_ANSWERFIELDID_FIELDNAME)}" value="{$field->id}" />

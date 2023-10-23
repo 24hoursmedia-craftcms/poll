@@ -85,7 +85,7 @@ class AnswerController extends Controller
 
 
         // get and validate the poll (only enabled polls can be submitted)
-        $poll = $service->getPoll($pollId, 'enabled');
+        $poll = $service->getPoll($pollId, 'enabled', $siteId);
         if (!$poll || $poll->uid !== $pollUid) {
             throw new BadRequestHttpException('Poll disabled or invalid');
         }
